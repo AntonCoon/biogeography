@@ -54,3 +54,69 @@ vapr <- extract(turaStack, points)
 #потом можно все склеить
 df <- cbind.data.frame(all_data,vapr)
 
+
+
+
+
+Call:
+lm(formula = V1 + V2 + V3 + V4 + V5 + V6 + V6 + V7 + V8 + V9 + 
+    V10 + V11 + V12 + V13 + V14 + V15 + V16 + V17 + V18 + V19 + 
+    V20 ~ ., data = simple_data)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.33860 -0.05659 -0.01534  0.01970  0.92817 
+
+Coefficients:
+                              Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                  7.792e-01  6.456e-02  12.069  < 2e-16 ***
+bio1                         1.440e-03  4.690e-04   3.071  0.00219 ** 
+bio12                        5.467e-06  2.335e-05   0.234  0.81493    
+solar_mean                   1.840e-05  3.042e-06   6.047 2.01e-09 ***
+wind_mean                    4.124e-02  4.974e-03   8.291 3.19e-16 ***
+vapr_mean                   -2.777e-01  8.461e-02  -3.281  0.00106 ** 
+excess_salts                -1.326e-02  1.816e-02  -0.730  0.46527    
+nutrient_availability       -1.664e-02  1.192e-02  -1.397  0.16273    
+nutrient_retention_capacity  2.307e-02  1.529e-02   1.509  0.13167    
+oxygen_availability         -5.006e-03  1.156e-02  -0.433  0.66510    
+rooting_conditions           8.002e-02  1.161e-02   6.894 9.08e-12 ***
+toxicity                    -5.610e-03  2.113e-02  -0.266  0.79064    
+workability                 -5.635e-02  1.322e-02  -4.261 2.20e-05 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.1536 on 1118 degrees of freedom
+Multiple R-squared:  0.2009,	Adjusted R-squared:  0.1923 
+F-statistic: 23.42 on 12 and 1118 DF,  p-value: < 2.2e-16
+
+#simple model
+Call:
+lm(formula = V1 + V2 + V3 + V4 + V5 + V6 + V6 + V7 + V8 + V9 + 
+    V10 + V11 + V12 + V13 + V14 + V15 + V16 + V17 + V18 + V19 + 
+    V20 ~ ., data = simple_data)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.33860 -0.05659 -0.01534  0.01970  0.92817 
+
+Coefficients:
+                              Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                  7.792e-01  6.456e-02  12.069  < 2e-16 ***
+bio1                         1.440e-03  4.690e-04   3.071  0.00219 ** 
+bio12                        5.467e-06  2.335e-05   0.234  0.81493    
+solar_mean                   1.840e-05  3.042e-06   6.047 2.01e-09 ***
+wind_mean                    4.124e-02  4.974e-03   8.291 3.19e-16 ***
+vapr_mean                   -2.777e-01  8.461e-02  -3.281  0.00106 ** 
+excess_salts                -1.326e-02  1.816e-02  -0.730  0.46527    
+nutrient_availability       -1.664e-02  1.192e-02  -1.397  0.16273    
+nutrient_retention_capacity  2.307e-02  1.529e-02   1.509  0.13167    
+oxygen_availability         -5.006e-03  1.156e-02  -0.433  0.66510    
+rooting_conditions           8.002e-02  1.161e-02   6.894 9.08e-12 ***
+toxicity                    -5.610e-03  2.113e-02  -0.266  0.79064    
+workability                 -5.635e-02  1.322e-02  -4.261 2.20e-05 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.1536 on 1118 degrees of freedom
+Multiple R-squared:  0.2009,	Adjusted R-squared:  0.1923 
+F-statistic: 23.42 on 12 and 1118 DF,  p-value: < 2.2e-16
