@@ -55,9 +55,7 @@ vapr <- extract(turaStack, points)
 df <- cbind.data.frame(all_data,vapr)
 
 
-
-
-
+----------------------------------------------
 Call:
 lm(formula = V1 + V2 + V3 + V4 + V5 + V6 + V6 + V7 + V8 + V9 + 
     V10 + V11 + V12 + V13 + V14 + V15 + V16 + V17 + V18 + V19 + 
@@ -84,44 +82,8 @@ toxicity                    -5.610e-03  2.113e-02  -0.266  0.79064
 workability                 -5.635e-02  1.322e-02  -4.261 2.20e-05 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 0.1536 on 1118 degrees of freedom
-Multiple R-squared:  0.2009,	Adjusted R-squared:  0.1923 
-F-statistic: 23.42 on 12 and 1118 DF,  p-value: < 2.2e-16
-
-#simple model
-Call:
-lm(formula = V1 + V2 + V3 + V4 + V5 + V6 + V6 + V7 + V8 + V9 + 
-    V10 + V11 + V12 + V13 + V14 + V15 + V16 + V17 + V18 + V19 + 
-    V20 ~ ., data = simple_data)
-
-Residuals:
-     Min       1Q   Median       3Q      Max 
--0.33860 -0.05659 -0.01534  0.01970  0.92817 
-
-Coefficients:
-                              Estimate Std. Error t value Pr(>|t|)    
-(Intercept)                  7.792e-01  6.456e-02  12.069  < 2e-16 ***
-bio1                         1.440e-03  4.690e-04   3.071  0.00219 ** 
-bio12                        5.467e-06  2.335e-05   0.234  0.81493    
-solar_mean                   1.840e-05  3.042e-06   6.047 2.01e-09 ***
-wind_mean                    4.124e-02  4.974e-03   8.291 3.19e-16 ***
-vapr_mean                   -2.777e-01  8.461e-02  -3.281  0.00106 ** 
-excess_salts                -1.326e-02  1.816e-02  -0.730  0.46527    
-nutrient_availability       -1.664e-02  1.192e-02  -1.397  0.16273    
-nutrient_retention_capacity  2.307e-02  1.529e-02   1.509  0.13167    
-oxygen_availability         -5.006e-03  1.156e-02  -0.433  0.66510    
-rooting_conditions           8.002e-02  1.161e-02   6.894 9.08e-12 ***
-toxicity                    -5.610e-03  2.113e-02  -0.266  0.79064    
-workability                 -5.635e-02  1.322e-02  -4.261 2.20e-05 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 0.1536 on 1118 degrees of freedom
-Multiple R-squared:  0.2009,	Adjusted R-squared:  0.1923 
-F-statistic: 23.42 on 12 and 1118 DF,  p-value: < 2.2e-16
-
-#step backward
+=====================================================================
+step 
 Call:
 lm(formula = V1 + V2 + V3 + V4 + V5 + V6 + V6 + V7 + V8 + V9 + 
     V10 + V11 + V12 + V13 + V14 + V15 + V16 + V17 + V18 + V19 + 
@@ -148,3 +110,77 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 Residual standard error: 0.1534 on 1123 degrees of freedom
 Multiple R-squared:  0.199,	Adjusted R-squared:  0.1941 
 F-statistic: 39.87 on 7 and 1123 DF,  p-value: < 2.2e-16
+==================================================================
+Call:
+lm(formula = V1 + V2 + V3 + V4 + V5 + V6 + V6 + V7 + V8 + V9 + 
+    V10 + V11 + V12 + V13 + V14 + V15 + V16 + V17 + V18 + V19 + 
+    V20 ~ bio1 + bio12 + toxicity, data = simple_data)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.10990 -0.05391 -0.03829 -0.02049  0.99935 
+
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)    
+(Intercept) 9.728e-01  2.242e-02  43.382  < 2e-16 ***
+bio1        6.988e-04  1.475e-04   4.737 2.44e-06 ***
+bio12       1.166e-05  2.285e-05   0.511    0.610    
+toxicity    1.592e-03  5.938e-03   0.268    0.789    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.1693 on 1127 degrees of freedom
+Multiple R-squared:  0.02058,	Adjusted R-squared:  0.01797 
+F-statistic: 7.893 on 3 and 1127 DF,  p-value: 3.262e-05
+==========================================================
+all step
+
+Call:
+lm(formula = V1 + V2 + V3 + V4 + V5 + V6 + V6 + V7 + V8 + V9 + 
+    V10 + V11 + V12 + V13 + V14 + V15 + V16 + V17 + V18 + V19 + 
+    V20 ~ bio2 + bio3 + bio6 + bio8 + bio9 + bio10 + bio11 + 
+    bio12 + bio13 + bio14 + bio15 + bio17 + bio19 + solar_max + 
+    solar_mean + wind_min + wind_median + vapr_min + vapr_max + 
+    vapr_median + nutrient_availability + oxygen_availability + 
+    rooting_conditions + workability, data = all)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.42148 -0.04655 -0.00659  0.04570  0.70025 
+
+Coefficients:
+                        Estimate Std. Error t value Pr(>|t|)    
+(Intercept)            4.548e-01  1.241e-01   3.666 0.000258 ***
+bio2                  -1.057e-02  1.049e-03 -10.073  < 2e-16 ***
+bio3                   1.043e-02  3.615e-03   2.885 0.003988 ** 
+bio6                  -9.152e-03  1.079e-03  -8.485  < 2e-16 ***
+bio8                   7.637e-04  1.213e-04   6.297 4.37e-10 ***
+bio9                  -4.341e-04  1.010e-04  -4.298 1.88e-05 ***
+bio10                  3.738e-03  5.326e-04   7.019 3.88e-12 ***
+bio11                  9.609e-03  1.152e-03   8.341  < 2e-16 ***
+bio12                 -9.155e-04  9.614e-05  -9.522  < 2e-16 ***
+bio13                  6.438e-03  5.492e-04  11.723  < 2e-16 ***
+bio14                 -7.514e-03  1.336e-03  -5.623 2.38e-08 ***
+bio15                 -4.452e-03  9.222e-04  -4.827 1.58e-06 ***
+bio17                  5.314e-03  5.424e-04   9.797  < 2e-16 ***
+bio19                 -7.240e-04  1.234e-04  -5.867 5.87e-09 ***
+solar_max              1.552e-05  5.307e-06   2.924 0.003521 ** 
+solar_mean             3.869e-05  6.715e-06   5.762 1.08e-08 ***
+wind_min               1.132e-01  2.253e-02   5.027 5.81e-07 ***
+wind_median           -7.417e-02  1.805e-02  -4.110 4.24e-05 ***
+vapr_min               6.514e-01  1.314e-01   4.957 8.26e-07 ***
+vapr_max              -2.821e-01  5.543e-02  -5.089 4.23e-07 ***
+vapr_median           -8.857e-01  1.495e-01  -5.923 4.23e-09 ***
+nutrient_availability -1.188e-02  4.661e-03  -2.549 0.010952 *  
+oxygen_availability    1.968e-02  5.795e-03   3.396 0.000708 ***
+rooting_conditions     4.209e-02  8.952e-03   4.701 2.91e-06 ***
+workability           -4.497e-02  9.784e-03  -4.597 4.79e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.1113 on 1106 degrees of freedom
+Multiple R-squared:  0.5848,	Adjusted R-squared:  0.5758 
+F-statistic: 64.91 on 24 and 1106 DF,  p-value: < 2.2e-16
+
+
+
