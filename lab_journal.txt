@@ -40,4 +40,17 @@ CV error (K=20): 0.01503
 tbl=read.table("mybed_450.12.Q")
 barplot(t(as.matrix(tbl)), col=rainbow(12),
           xlab="Individual #", ylab="Ancestry", border=NA)
+          
+#тут просто достаешь ширину и долготу из данных
+coords <- data.frame(x=all_data["longitude"],y=all_data["latitude"])
+points <- SpatialPoints(coords, proj4string = r@crs)
+
+#'wc2.0_5m_vapr/' - папка со всеми растовыми файлами, у меня файлы типа tif мб и на твоих сработает
+list <- list.files(path='wc2.0_5m_vapr/', full.names=TRUE)
+turaStack <- stack(list)
+image(turaStack)
+vapr <- extract(turaStack, points)
+
+#потом можно все склеить
+df <- cbind.data.frame(all_data,vapr)
 
