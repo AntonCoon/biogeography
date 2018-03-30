@@ -2,16 +2,16 @@ library(raster)
 
 
 nutrient.availability <-
-  as.matrix(raster("./quolity/nutrient_availability.asc"))
+  as.matrix(raster("./quality/nutrient_availability.asc"))
 nutrient.retention.capacity <-
-  as.matrix(raster("./quolity/nutrient_retention_capacity.asc"))
+  as.matrix(raster("./quality/nutrient_retention_capacity.asc"))
 rooting.conditions <-
-  as.matrix(raster("./quolity/rooting_conditions.asc"))
+  as.matrix(raster("./quality/rooting_conditions.asc"))
 oxygen.availability <-
-  as.matrix(raster("./quolity/oxygen_availability.asc"))
-excess.salts <- as.matrix(raster("./quolity/excess_salts.asc"))
-toxicity <- as.matrix(raster("./quolity/toxicity.asc"))
-workability <- as.matrix(raster("./quolity/workability.asc"))
+  as.matrix(raster("./quality/oxygen_availability.asc"))
+excess.salts <- as.matrix(raster("./quality/excess_salts.asc"))
+toxicity <- as.matrix(raster("./quality/toxicity.asc"))
+workability <- as.matrix(raster("./quality/workability.asc"))
 
 get_soil_quality_by_coords <- function(lat, lon, matrix.data) {
   scale = dim(matrix.data) / c(180, 360)
