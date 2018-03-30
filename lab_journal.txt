@@ -181,6 +181,48 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 Residual standard error: 0.1113 on 1106 degrees of freedom
 Multiple R-squared:  0.5848,	Adjusted R-squared:  0.5758 
 F-statistic: 64.91 on 24 and 1106 DF,  p-value: < 2.2e-16
+=======================================================================
+
+Call:
+lm(formula = V1 + V2 + V3 + V4 + V5 + V6 + V6 + V7 + V8 + V9 + 
+    V10 + V11 + V12 + V13 + V14 + V15 + V16 + V17 + V18 + V19 + 
+    V20 ~ bio2 + bio8 + bio9 + bio10 + bio12 + bio13 + bio14 + 
+    bio15 + bio17 + bio19 + solar_mean + wind_median + vapr_min + 
+    vapr_max + vapr_median + nutrient_availability + rooting_conditions + 
+    workability + nutrient_retention_capacity, data = all)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.48613 -0.05323 -0.01342  0.04222  0.80270 
+
+Coefficients:
+                              Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                  9.163e-01  5.043e-02  18.170  < 2e-16 ***
+bio2                        -5.630e-03  3.915e-04 -14.379  < 2e-16 ***
+bio8                         5.800e-04  1.276e-04   4.546 6.05e-06 ***
+bio9                        -2.224e-04  1.010e-04  -2.202 0.027836 *  
+bio10                        2.956e-03  4.468e-04   6.616 5.73e-11 ***
+bio12                       -9.795e-04  9.019e-05 -10.861  < 2e-16 ***
+bio13                        6.406e-03  5.443e-04  11.770  < 2e-16 ***
+bio14                       -8.519e-03  1.398e-03  -6.096 1.50e-09 ***
+bio15                       -2.987e-03  8.968e-04  -3.331 0.000894 ***
+bio17                        5.903e-03  5.654e-04  10.440  < 2e-16 ***
+bio19                       -7.618e-04  1.273e-04  -5.982 2.97e-09 ***
+solar_mean                   5.305e-05  3.933e-06  13.488  < 2e-16 ***
+wind_median                  1.091e-02  4.901e-03   2.226 0.026207 *  
+vapr_min                     9.951e-01  1.092e-01   9.116  < 2e-16 ***
+vapr_max                    -1.538e-01  5.194e-02  -2.961 0.003130 ** 
+vapr_median                 -1.159e+00  1.465e-01  -7.909 6.21e-15 ***
+nutrient_availability       -2.312e-02  9.286e-03  -2.490 0.012915 *  
+rooting_conditions           5.959e-02  9.338e-03   6.382 2.57e-10 ***
+workability                 -5.716e-02  1.004e-02  -5.696 1.57e-08 ***
+nutrient_retention_capacity  2.184e-02  1.069e-02   2.043 0.041322 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.119 on 1111 degrees of freedom
+Multiple R-squared:  0.523,	Adjusted R-squared:  0.5149 
+F-statistic: 64.12 on 19 and 1111 DF,  p-value: < 2.2e-16
 
 
 
