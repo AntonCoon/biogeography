@@ -120,3 +120,31 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 Residual standard error: 0.1536 on 1118 degrees of freedom
 Multiple R-squared:  0.2009,	Adjusted R-squared:  0.1923 
 F-statistic: 23.42 on 12 and 1118 DF,  p-value: < 2.2e-16
+
+#step backward
+Call:
+lm(formula = V1 + V2 + V3 + V4 + V5 + V6 + V6 + V7 + V8 + V9 + 
+    V10 + V11 + V12 + V13 + V14 + V15 + V16 + V17 + V18 + V19 + 
+    V20 ~ bio1 + solar_mean + wind_mean + vapr_mean + excess_salts + 
+    rooting_conditions + workability, data = simple_data)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.33830 -0.05626 -0.01570  0.01912  0.93577 
+
+Coefficients:
+                     Estimate Std. Error t value Pr(>|t|)    
+(Intercept)         7.721e-01  6.318e-02  12.220  < 2e-16 ***
+bio1                1.390e-03  4.584e-04   3.032 0.002482 ** 
+solar_mean          1.879e-05  2.974e-06   6.320 3.76e-10 ***
+wind_mean           4.160e-02  4.848e-03   8.581  < 2e-16 ***
+vapr_mean          -2.688e-01  8.066e-02  -3.333 0.000888 ***
+excess_salts       -1.721e-02  7.634e-03  -2.255 0.024332 *  
+rooting_conditions  8.131e-02  1.125e-02   7.230 8.90e-13 ***
+workability        -5.762e-02  1.295e-02  -4.449 9.47e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.1534 on 1123 degrees of freedom
+Multiple R-squared:  0.199,	Adjusted R-squared:  0.1941 
+F-statistic: 39.87 on 7 and 1123 DF,  p-value: < 2.2e-16
