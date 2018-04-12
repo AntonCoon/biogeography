@@ -1,0 +1,52 @@
+---
+title: "LinearModel"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Линейная модель
+
+```{r}
+bio_geo_data <- cbind(
+    read.csv("../our_data/new_Q_table_20.csv"),
+    read.csv("../our_data/result_k_20_climate_soil.csv")
+    )
+excluding.vars <- names(bio_geo_data) %in% c("X", "X.1", "latitude", "longitude") 
+clear.bio.geo.data <- bio_geo_data[!excluding.vars]
+    str(clear.bio.geo.data)
+```
+
+### Идея номер один
+Хочется предсказывать вектор, по вектору, для этого попробуем запилить такую модель:
+$$S = A \times P + С$$
+Здесь $S$ - вектор, соответствующий разбиению генома по admixture компонентам. Его мы предсказываем по вектору параметров $P$. Вектор $C$ - просто константа. Таким образом, если у нас $k$ кластеров, и $n$ признаков, то $A$ - это матрица размера $n \times k$. Если посмотреть на то, что такое $S_i$ в векторе $S$, то станет ясно, что каждому $i$ в матрице $A$ соответствует именно $i$-тая строка. Так что можно пулучить матрицу $A$ просто находя коэффициенты для каждого $i$-того элемента, по заданному вектору $P$. Каждый набор коэффициентов будет строкой в матрице $A$.
+
+```{r}
+step()
+parametrs <- paste(names())
+all.formulas <- lapply(1:20, function(number) {
+    as.formula(paste0("V", toString(number), "~ ."))
+})
+
+all.models <- lapply(all.formulas, lm)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

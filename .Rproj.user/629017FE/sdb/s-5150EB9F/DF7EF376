@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "# tbl <- read.table(\"./our_data/mybed_450.20.Q\")\n# barplot(t(as.matrix(tbl)), col=rainbow(12),\n#         xlab=\"Individual #\", ylab=\"Ancestry\", border=NA)\n# barplot(t(as.matrix(tbl))[2,],\n#         xlab=\"Individual #\", ylab=\"Ancestry\", border=NA)\n# t(as.matrix(tbl))[1,]\n# \n# View(read.csv(\"./our_data/result_k_20_climate_soil.csv\"))\n\n\nbio_geo_data <- read.csv(\"./our_data/result_k_20_climate_soil.csv\")\n\nnames(bio_geo_data)\n",
+    "created" : 1522269212487.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3271195018",
+    "id" : "DF7EF376",
+    "lastKnownWriteTime" : 1522497395,
+    "last_content_update" : 1522497395764,
+    "path" : "C:/Users/tonie/Desktop/study/AU/sem_2/НИР_2/biogeography/main.R",
+    "project_path" : "main.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

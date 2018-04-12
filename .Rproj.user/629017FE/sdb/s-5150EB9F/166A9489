@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "# library(raster)\n# \n# \n# nutrient.availability <-\n#   as.matrix(raster(\"./quality/nutrient_availability.asc\"))\n# nutrient.retention.capacity <-\n#   as.matrix(raster(\"./quality/nutrient_retention_capacity.asc\"))\n# rooting.conditions <-\n#   as.matrix(raster(\"./quality/rooting_conditions.asc\"))\n# oxygen.availability <-\n#   as.matrix(raster(\"./quality/oxygen_availability.asc\"))\n# excess.salts <- as.matrix(raster(\"./quality/excess_salts.asc\"))\n# toxicity <- as.matrix(raster(\"./quality/toxicity.asc\"))\n# workability <- as.matrix(raster(\"./quality/workability.asc\"))\n# \n# get_soil_quality_by_coords <- function(lat, lon, matrix.data) {\n#   scale = dim(matrix.data) / c(180, 360)\n#   scaled.lat <- round((-lat + 90) * scale[1])\n#   scaled.lon <- round((-lon + 180) * scale[2])\n#   matrix.data[scaled.lat, scaled.lon]\n# }\n# \n# bio_geo_data <- read.csv(\"./our_data/result_k_20_climate.csv\")\n# \n# \n# bio_geo_data$nutrient.availability <- with(\n#   bio_geo_data, \n#   get_soil_quality_by_coords(\n#     latitude, \n#     longitude, \n#     nutrient.availability\n#   )\n# )\n# \n# bio_geo_data$nutrient.retention.capacity <- with(\n#   bio_geo_data, \n#   get_soil_quality_by_coords(\n#     latitude, \n#     longitude, \n#     nutrient.retention.capacity\n#   )\n# )\n# \n# bio_geo_data$rooting.conditions <- with(\n#   bio_geo_data, \n#   get_soil_quality_by_coords(\n#     latitude, \n#     longitude, \n#     rooting.conditions\n#   )\n# )\n# \n# \n# bio_geo_data$oxygen.availability <- with(\n#   bio_geo_data, \n#   get_soil_quality_by_coords(\n#     latitude, \n#     longitude, \n#     oxygen.availability\n#   )\n# )\n# \n# \n# bio_geo_data$excess.salts <- with(\n#   bio_geo_data, \n#   get_soil_quality_by_coords(\n#     latitude, \n#     longitude, \n#     excess.salts\n#   )\n# )\n# \n# bio_geo_data$toxicity <- with(\n#   bio_geo_data, \n#   get_soil_quality_by_coords(\n#     latitude, \n#     longitude, \n#     toxicity\n#   )\n# )\n# \n# bio_geo_data$workability <- with(\n#   bio_geo_data, \n#   get_soil_quality_by_coords(\n#     latitude, \n#     longitude, \n#     workability\n#   )\n# )\n# \n# \n# write.csv(bio_geo_data,  file = \"result_k_20_climate_soil.csv\")\n\nlibrary(raster)\nbio_geo_data <- read.csv(\"./our_data/result_k_20_climate.csv\")\n\ncoords <- data.frame(x = bio_geo_data[\"longitude\"],y = bio_geo_data[\"latitude\"])\npoints <- SpatialPoints(coords, proj4string = raster()@crs)\n\n#'wc2.0_5m_vapr/' - папка со всеми растовыми файлами, у меня файлы типа tif мб и на твоих сработает\nlist <- list.files(path='quality/', full.names=TRUE)\nturaStack <- stack(list)\nimage(turaStack)\nvapr <- extract(turaStack, points)\n\n#потом можно все склеить\ndf <- cbind.data.frame(all_data,vapr)\n\n\na <- c(1, 2, 3)\nb <- c(1, 2, 3, 4)\nA <- matrix(1:12, ncol = 4)\nA%*%b\n",
+    "created" : 1522361402848.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "4221904630",
+    "id" : "166A9489",
+    "lastKnownWriteTime" : 1523400923,
+    "last_content_update" : 1523400923527,
+    "path" : "C:/Users/tonie/Desktop/study/AU/sem_2/НИР_2/biogeography/soil_data_extraction.R",
+    "project_path" : "soil_data_extraction.R",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "---\ntitle: \"LinearModel\"\noutput:\n  html_document: default\n  pdf_document: default\n---\n\n```{r setup, include=FALSE}\nknitr::opts_chunk$set(echo = TRUE)\n```\n\n## Линейная модель\n\n```{r}\nbio_geo_data <- cbind(\n    read.csv(\"../our_data/new_Q_table_20.csv\"),\n    read.csv(\"../our_data/result_k_20_climate_soil.csv\")\n    )\nexcluding.vars <- names(bio_geo_data) %in% c(\"X\", \"X.1\", \"latitude\", \"longitude\") \nclear.bio.geo.data <- bio_geo_data[!excluding.vars]\n    str(clear.bio.geo.data)\n```\n\n### Идея номер один\nХочется предсказывать вектор, по вектору, для этого попробуем запилить такую модель:\n$$S = A \\times P + С$$\nЗдесь $S$ - вектор, соответствующий разбиению генома по admixture компонентам. Его мы предсказываем по вектору параметров $P$. Вектор $C$ - просто константа. Таким образом, если у нас $k$ кластеров, и $n$ признаков, то $A$ - это матрица размера $n \\times k$. Если посмотреть на то, что такое $S_i$ в векторе $S$, то станет ясно, что каждому $i$ в матрице $A$ соответствует именно $i$-тая строка. Так что можно пулучить матрицу $A$ просто находя коэффициенты для каждого $i$-того элемента, по заданному вектору $P$. Каждый набор коэффициентов будет строкой в матрице $A$.\n\n```{r}\nstep()\nparametrs <- paste(names())\nall.formulas <- lapply(1:20, function(number) {\n    as.formula(paste0(\"V\", toString(number), \"~ .\"))\n})\n\nall.models <- lapply(all.formulas, lm)\n```\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+    "created" : 1522527706120.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "472244292",
+    "id" : "9953EB0A",
+    "lastKnownWriteTime" : 1523480055,
+    "last_content_update" : 1523480055058,
+    "path" : "C:/Users/tonie/Desktop/study/AU/sem_2/НИР_2/biogeography/linear_model/LinearModel.Rmd",
+    "project_path" : "linear_model/LinearModel.Rmd",
+    "properties" : {
+        "last_setup_crc32" : "43EE690bb338d19",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}
