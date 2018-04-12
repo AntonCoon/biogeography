@@ -7,6 +7,10 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(knitr)
+library(psych)
+library(gridExtra)
 ```
 
 ## Линейная модель
@@ -25,7 +29,7 @@ clear.bio.geo.data <- bio_geo_data[!excluding.vars]
 Хочется предсказывать вектор, по вектору, для этого попробуем запилить такую модель:
 $$S = A \times P + С$$
 Здесь $S$ - вектор, соответствующий разбиению генома по admixture компонентам. Его мы предсказываем по вектору параметров $P$. Вектор $C$ - просто константа. Таким образом, если у нас $k$ кластеров, и $n$ признаков, то $A$ - это матрица размера $n \times k$. Если посмотреть на то, что такое $S_i$ в векторе $S$, то станет ясно, что каждому $i$ в матрице $A$ соответствует именно $i$-тая строка. Так что можно пулучить матрицу $A$ просто находя коэффициенты для каждого $i$-того элемента, по заданному вектору $P$. Каждый набор коэффициентов будет строкой в матрице $A$.\n
-Так для того, чтобы строки матрицы были согласованными, необходимо использовать одинаковую модель в каждом случае, то нужно выбрать модель, подходящую для большинства элементов вектора $S$. Для этого сделаем что то не очень сложное, запустим для каждой компоненты step в направлении backward, от линейной модели для данной компоненты в зависимости от всех параметров, если данная переменная встречается хотябы 3 раза из 20 возможных, то возьмем ее. Очень не строго все и весело.
+Так для того, чтобы строки матрицы были согласованными, необходимо использовать одинаковую модель в каждом случае, то нужно выбрать модель, подходящую для большинства элементов вектора $S$. Для этого сделаем что то не очень сложное, запустим для каждой компоненты step в направлении backward, от линейной модели для данной компоненты в зависимости от всех параметров. Посмотрим на барплот и решим, что брать, что не брать, очень не строго все и весело.
 
 ```{r}
 param.string <- paste(names(clear.bio.geo.data)[21:length(clear.bio.geo.data)], collapse = " + ")
@@ -33,9 +37,29 @@ all.step.result <- lapply(1:20, function(number) {
     var <- paste0("V", toString(number))
     full.formula <- as.formula(paste0(var, " ~ ", param.string))
     current.model <- step(lm(full.formula, clear.bio.geo.data), trace=0)
-    names(model$coefficients)
+    names(current.model$coefficients)
 })
-all.step.result[[1]]
+```
+Посмотрим, какие переменные оставались в результате step и сколько раз.
+```{r}
+coef.count <- table(unlist(all.step.result))
+coef.list <- as.list(coef.count)
+vals <- unlist(coef.list)
+names(vals) <- NULL
+coef.data.frame <- data.frame(name = names(coef.list), val = vals)
+ggplot(coef.data.frame, aes(x = name, y = val)) +
+    geom_bar(stat="identity", aes(fill = val)) + 
+    theme_minimal() +
+    coord_flip()
+```
+
+Возьмем, для начала, все те переменные, которые встретились в моделях не менне чем 15 раз. Потом посмотрим на скореллированные, и из них выберем те, которые встречаются чаще.
+
+```{r}
+preval.vars <- subset(coef.data.frame, val >= 15)
+just.name <- droplevels(unlist(preval.vars$name))
+param.data.set <- clear.bio.geo.data[names(clear.bio.geo.data) %in% just.name]
+pairs.panels(param.data.set, lm=TRUE)
 ```
 
 
