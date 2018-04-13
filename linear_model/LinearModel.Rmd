@@ -27,12 +27,12 @@ clear.bio.geo.data <- bio_geo_data[!excluding.vars]
 
 ### Идея номер один
 Хочется предсказывать вектор, по вектору, для этого попробуем запилить такую модель:
-$$S = A \times P + С$$
-Здесь $S$ - вектор, соответствующий разбиению генома по admixture компонентам. Его мы предсказываем по вектору параметров $P$. Вектор $C$ - просто константа. Таким образом, если у нас $k$ кластеров, и $n$ признаков, то $A$ - это матрица размера $n \times k$. Если посмотреть на то, что такое $S_i$ в векторе $S$, то станет ясно, что каждому $i$ в матрице $A$ соответствует именно $i$-тая строка. Так что можно пулучить матрицу $A$ просто находя коэффициенты для каждого $i$-того элемента, по заданному вектору $P$. Каждый набор коэффициентов будет строкой в матрице $A$.\n
+$$S = A \times P$$
+Здесь $S$ - вектор, соответствующий разбиению генома по admixture компонентам. Его мы предсказываем по вектору параметров $P$. Таким образом, если у нас $k$ кластеров, и $n$ признаков, то $A$ - это матрица размера $n \times k$. Если посмотреть на то, что такое $S_i$ в векторе $S$, то станет ясно, что каждому $i$ в матрице $A$ соответствует именно $i$-тая строка. Так что можно пулучить матрицу $A$ просто находя коэффициенты для каждого $i$-того элемента, по заданному вектору $P$. Каждый набор коэффициентов будет строкой в матрице $A$.\n
 Так для того, чтобы строки матрицы были согласованными, необходимо использовать одинаковую модель в каждом случае, то нужно выбрать модель, подходящую для большинства элементов вектора $S$. Для этого сделаем что то не очень сложное, запустим для каждой компоненты step в направлении backward, от линейной модели для данной компоненты в зависимости от всех параметров. Посмотрим на барплот и решим, что брать, что не брать, очень не строго все и весело.
 
 ```{r}
-param.string <- paste(names(clear.bio.geo.data)[21:length(clear.bio.geo.data)], collapse = " + ")
+param.string <- paste(c("0", names(clear.bio.geo.data)[21:length(clear.bio.geo.data)]), collapse = " + ")
 all.step.result <- lapply(1:20, function(number) {
     var <- paste0("V", toString(number))
     full.formula <- as.formula(paste0(var, " ~ ", param.string))
@@ -40,7 +40,9 @@ all.step.result <- lapply(1:20, function(number) {
     names(current.model$coefficients)
 })
 ```
+
 Посмотрим, какие переменные оставались в результате step и сколько раз.
+
 ```{r}
 coef.count <- table(unlist(all.step.result))
 coef.list <- as.list(coef.count)
@@ -53,21 +55,76 @@ ggplot(coef.data.frame, aes(x = name, y = val)) +
     coord_flip()
 ```
 
-Возьмем, для начала, все те переменные, которые встретились в моделях не менне чем 15 раз. Потом посмотрим на скореллированные, и из них выберем те, которые встречаются чаще.
+Возьмем, для начала, все те переменные, которые встретились в моделях не менне чем 14 раз. Потом посмотрим на скореллированные, и из них выберем те, которые встречаются чаще.
 
 ```{r}
-preval.vars <- subset(coef.data.frame, val >= 15)
+preval.vars <- subset(coef.data.frame, val >= 14)
 just.name <- droplevels(unlist(preval.vars$name))
 param.data.set <- clear.bio.geo.data[names(clear.bio.geo.data) %in% just.name]
 pairs.panels(param.data.set, lm=TRUE)
 ```
 
+Видно, что скореллированных параметров много. Идея такая, выберем все пары, корреляция между которыми больше 0.3 по модулю и из каждой такой пары запишем в список ту переменную, которая реже встречалась в моделях, ту пеерменную, которую мы записали, будем считаем проигравшей. Те переменные, которые чаще проигрывают, в итоге выкинем.Конечно, можно было бы сразу почистить датасет от коррелирующих переменных, но тогда мы бы не узнали, какие переменные чаще встречаются в моделях.
 
+```{r}
+preval.vars.vector <- preval.vars$val
+names(preval.vars.vector) <- preval.vars$name
+corr.data.frame <- as.data.frame.table(cor(param.data.set))
+sifted.names <- c()
+.res <- lapply(1:length(corr.data.frame[,1]), function(position) {
+    if (abs(corr.data.frame[position, 3]) > 0.3) {
+        name.1 <- toString(corr.data.frame[position, 1])
+        name.2 <- toString(corr.data.frame[position, 2])
+        if (preval.vars.vector[name.1] < preval.vars.vector[name.2]) {
+            assign("sifted.names", c(sifted.names, name.1), envir=parent.frame(n=2))
+        } else {
+            assign("sifted.names", c(sifted.names, name.2), envir=parent.frame(n=2))
+        }
+    }
+})
+winners.var <- table(c(sifted.names, names(preval.vars$name)))
+winners.var <- winners.var[winners.var < median(winners.var)]
+final.string.model <- paste(c("0", names(winners.var)), collapse = " + ")
+final.string.model
+```
 
+Ну получилась какая-то такая модель. Теперь нужно сформировать матрицу коэффициентов. Для этого посчитаем все модели, возьмем их коэффициенты и совокупим в матрицу.
 
+```{r}
+final.coef.list <- lapply(1:20, function(number) {
+    var <- paste0("V", toString(number))
+    full.formula <- as.formula(paste0(var, " ~ ", final.string.model))
+    current.model <- lm(full.formula, clear.bio.geo.data)
+    unname(current.model$coefficients)
+})
+A <- matrix(unlist(final.coef.list), ncol = length(winners.var), byrow = TRUE)
+```
 
+Получившуюся матрицу трудно объяснять, данные не нормированны, можно посмотреть, какие значения(вектора) она предсказывает и сравнить с реальными. Посмотреть на отклонение предсказанных векторов от реальных и визуализировать как барплот, длинна вектора-отклонения для каждого семпла.
 
+```{r}
+just.name <- names(winners.var)
+winners.var.subset <- param.data.set[names(param.data.set) %in% just.name]
+deviation <- lapply(1:length(winners.var.subset[, 1]), function(position) {
+    sqrt(
+        sum(
+            (as.numeric(clear.bio.geo.data[position, 1:20]) - 
+                 as.numeric(A %*% as.numeric(winners.var.subset[position,])))^2
+            )
+        )
+})
+deviation <- unlist(deviation)
+```
 
+Посмотрим на график и убедимся, что получилась хрень.
+
+```{r}
+deviation.df <- data.frame(number = 1:length(deviation), dev = deviation)
+ggplot(deviation.df, aes(x = number, y = dev)) + 
+    geom_bar(stat = "identity") + theme_minimal()
+```
+
+Ну как и ожидалось, получилась ерунда полная. У нас сумма значений предсказываемого вектора единица, то есть его длинна на может быть больше чем 1 и то это достигается когда все значения кроме одного нулевые. А на графике видно, что отклонение меньше 300 не бывает даже. Надо пробовать что то адекватное, либо менять эту модель.
 
 
 
