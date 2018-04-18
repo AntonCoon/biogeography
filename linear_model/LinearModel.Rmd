@@ -17,8 +17,8 @@ library(gridExtra)
 
 ```{r}
 bio_geo_data <- cbind(
-    read.csv("../our_data/new_Q_table_20.csv"),
-    read.csv("../our_data/result_k_20_climate_soil.csv")
+    read.csv("../full_dataframes/new_Q_table_20.csv"),
+    read.csv("../full_dataframes/result_k_20_climate_soil.csv")
     )
 excluding.vars <- names(bio_geo_data) %in% c("X", "X.1", "latitude", "longitude") 
 clear.bio.geo.data <- bio_geo_data[!excluding.vars]
