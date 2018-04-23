@@ -16,7 +16,7 @@ library(Rtsne)
 
 ```{r cars}
 library(data.table)
-Q_table <- read.csv("full_dataframes/new_Q_table_12.csv")
+Q_table <- read.csv("../full_dataframes/new_Q_table_12.csv")
 Q <- data.table(Q_table)[, !"X"]
 Q$label <-
   c(rownames(Q), 'none')[apply(Q,1,function(x) max(which(x>0.85)))]
@@ -24,20 +24,23 @@ Q[is.na(Q$label)] <- '0'
 Labels<-Q$label
 Q$label<-as.factor(Q$label)
 Q
-# tsne <- Rtsne(data, dims = 2, perplexity=30, verbose=TRUE, max_iter = 500)
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
 
 ```{r pressure, echo=FALSE}
+tsne <- Rtsne(data, dims = 2, perplexity=30, verbose=TRUE, max_iter = 500)
 colors = rainbow(length(unique(Q$label)))
 names(colors) = unique(Q$label)
 plot(tsne$Y, t='n', main="tsne")
 text(tsne$Y, labels=Q$label, col=colors[Q$label])
 ```
 
+```{r pressure, echo=FALSE}
+library(ggfortify)
+pca <- prcomp(Q[, !"label"])
 
+df <- data.frame(Q)
+pca <- prcomp(df[, 1:12])
+autoplot(pca, data=df, col="label")
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```
