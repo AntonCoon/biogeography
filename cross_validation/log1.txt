@@ -1,0 +1,4 @@
+Summary:
+Converged in 1 iterations (165.73 sec)
+Loglikelihood: -4651866.917264
+CV error (K=1): 0.01899

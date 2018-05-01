@@ -1,0 +1,9 @@
+Summary:
+Converged in 41 iterations (4973.56 sec)
+Loglikelihood: -4093267.453932
+Fst divergences between estimated populations:
+        Pop0    Pop1
+Pop0
+Pop1    0.454
+Pop2    0.090   0.474
+CV error (K=3): 0.01704
