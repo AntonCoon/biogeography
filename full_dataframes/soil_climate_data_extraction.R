@@ -5,6 +5,7 @@ library(rgdal)
 # library(rhwsd)
 
 setwd(file.path(getwd(), "full_dataframes"))
+
 r <- raster::getData("worldclim",var="bio",res=5, path="../1_clime_data")
 
 
@@ -70,6 +71,7 @@ result_table["wind_max"] <- apply(wind, 1, FUN=max)
 result_table["wind_mean"]<-rowMeans(wind) 
 
 # water vapor pressure
+
 list <- list.files(path='../1_clime_data/wc2.0_5m_vapr/', full.names=TRUE)
 turaStack <- stack(list)
 image(turaStack)
@@ -88,6 +90,7 @@ result_table["vapr_mean"] <- rowMeans(vapr)
 
 # result table
 write.csv(result_table , file = "result_k_12_climate_soil.csv")
+
 
 
 
