@@ -94,13 +94,26 @@ write.csv(result_table , file = "result_k_12_climate_soil.csv")
 
 
 
+install.packages("devtools")
+library(devtools)
+install_github("dlebauer/rhwsd")
+
+library(rhwsd)
+extract.latlon(lat = 44, lon = -80, gridsize = 0.1, con = con)
+
+download.file("http://webarchive.iiasa.ac.at/Research/LUC/External-World-soil-database/HWSD_Data/HWSD_RASTER.zip", destfile=tempfile())
+unzip(tempfile(), exdir=system.file("extdata", package = "rhwsd"))
+require(raster)
+hwsd <- raster(system.file("extdata/hwsd.bil", package = "rhwsd"))
+
+library(rhwsd)
+con <- get.hwsd.con()
+ans <- get.hwsd(abox = c(44, 44.5, -88.5, -88), con = con)
+ans <- get.hwsd(lat = 44, lon = -88, gridsize = 0.1, con = con)
 
 
 
-
-
-
-hwsd.path <- '../2_soil_data/HWSD_RASTER/hwsd.bil'
+hwsd.path <- '../../R_part_soilDB/HWSD_RASTER/hwsd.bil'
 hwsd.sql.path <- '../2_soil_data/HWSD.sqlite'
 
 hwsd <- raster(hwsd.path)
@@ -116,5 +129,15 @@ dbListTables(con)
 dbGetQuery(con, "pragma table_info(HWSD_DATA)")$name
 dbGetQuery(con, "pragma table_info(HWSD_DATA)")$type
 
+(display.fields <- c("ID", "MU_GLOBAL", "ISSOIL", 
+                     "SHARE", "SU_CODE90", "SU_SYM90", 
+                     "T_USDA_TEX_CLASS"))
+
+tmp <- dbGetQuery(con, 
+                  paste("select", paste(display.fields, collapse = ","),
+                        "from HWSD_DATA limit 10"))
+
+dim(tmp)
+print(tmp[, display.fields])
 
 
