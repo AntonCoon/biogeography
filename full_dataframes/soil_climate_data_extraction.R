@@ -2,18 +2,14 @@ library(psych)
 library(raster)
 library(sp)
 library(rgdal)
-# library(rhwsd)
 
-setwd(file.path(getwd(), "full_dataframes"))
-
-r <- raster::getData("worldclim",var="bio",res=5, path="../1_clime_data")
-
-
+# biogeography is working directory
+r <- raster::getData("worldclim",var="bio",res=5, path="./1_clime_data")
 # coordinate.csv - file with longitude and latitude for samples.
 # (http://1001genomes.org/accessions.html)
 # mybed_450.12.Q - Q table from admixture
-file <- read.csv("coordinate.csv")
-tbl <- read.table("mybed_450.12.Q")
+file <- read.csv("./full_dataframes/coordinate.csv")
+tbl <- read.table("./full_dataframes/mybed_450.12.Q")
 
 
 all_data <- cbind(
@@ -53,7 +49,7 @@ write.csv(new_Q_table , file = "new_Q_table_12.csv")
 # for other parameters from worldclim dowload manualy 5 minute 
 # tar (remove readme.txt from folder)
 # sun radiation
-list <- list.files(path='../1_clime_data/wc2.0_5m_srad/', full.names=TRUE)
+list <- list.files(path='./1_clime_data/wc2.0_5m_srad/', full.names=TRUE)
 turaStack <- stack(list)
 image(turaStack)
 srad <- extract(turaStack, points)
@@ -62,7 +58,7 @@ result_table["solar_max"] <- apply(srad, 1, FUN=max)
 result_table["solar_mean"] <- rowMeans(srad) 
 
 # wind speed
-list <- list.files(path='../1_clime_data/wc2.0_5m_wind/', full.names=TRUE)
+list <- list.files(path='./1_clime_data/wc2.0_5m_wind/', full.names=TRUE)
 turaStack <- stack(list)
 image(turaStack)
 wind <- extract(turaStack, points)
@@ -72,7 +68,7 @@ result_table["wind_mean"]<-rowMeans(wind)
 
 # water vapor pressure
 
-list <- list.files(path='../1_clime_data/wc2.0_5m_vapr/', full.names=TRUE)
+list <- list.files(path='./1_clime_data/wc2.0_5m_vapr/', full.names=TRUE)
 turaStack <- stack(list)
 image(turaStack)
 vapr <- extract(turaStack, points)
@@ -80,64 +76,72 @@ result_table["vapr_min"] <- apply(vapr, 1, FUN=min)
 result_table["vapr_max"] <- apply(vapr, 1, FUN=max) 
 result_table["vapr_mean"] <- rowMeans(vapr)
 
-# soil parameters
-# list <- list.files(path='../1_clime_data/soil/', full.names=TRUE)
-# turaStack <- stack(list)
-# image(turaStack)
-# vapr <- extract(turaStack, points)
-# 
-# result_table <- cbind.data.frame(result_table,vapr)
 
 # result table
 write.csv(result_table , file = "result_k_12_climate_soil.csv")
 
 
-
-
-install.packages("devtools")
-library(devtools)
-install_github("dlebauer/rhwsd")
-
-library(rhwsd)
-extract.latlon(lat = 44, lon = -80, gridsize = 0.1, con = con)
-
-download.file("http://webarchive.iiasa.ac.at/Research/LUC/External-World-soil-database/HWSD_Data/HWSD_RASTER.zip", destfile=tempfile())
-unzip(tempfile(), exdir=system.file("extdata", package = "rhwsd"))
-require(raster)
-hwsd <- raster(system.file("extdata/hwsd.bil", package = "rhwsd"))
-
-library(rhwsd)
-con <- get.hwsd.con()
-ans <- get.hwsd(abox = c(44, 44.5, -88.5, -88), con = con)
-ans <- get.hwsd(lat = 44, lon = -88, gridsize = 0.1, con = con)
-
-
-
-hwsd.path <- '../../R_part_soilDB/HWSD_RASTER/hwsd.bil'
-hwsd.sql.path <- '../2_soil_data/HWSD.sqlite'
+# soil parameters
+hwsd.path <- './2_soil_data/hwsd.bil'
+hwsd.sql.path <- './2_soil_data/HWSD.sqlite'
 
 hwsd <- raster(hwsd.path)
-plot(hwsd)
-(proj4string(hwsd) <-"+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0")
-
-hwsd.in.points <- extract(hwsd, points)
-str(hwsd.in.points)
+MU_GLOBAL.in.points <- extract(hwsd, points)
 
 m <- dbDriver("SQLite")
 con <- dbConnect(m, dbname=hwsd.sql.path)
 dbListTables(con)
-dbGetQuery(con, "pragma table_info(HWSD_DATA)")$name
-dbGetQuery(con, "pragma table_info(HWSD_DATA)")$type
 
-(display.fields <- c("ID", "MU_GLOBAL", "ISSOIL", 
-                     "SHARE", "SU_CODE90", "SU_SYM90", 
-                     "T_USDA_TEX_CLASS"))
+# According to Harmonized World Soil Database dockumentation 
+# http://www.fao.org/fileadmin/templates/nr/documents/HWSD/HWSD_Documentation.pdf 
+# numeric Physical and chemical characteristics of topsoil (0-30 cm) and subsoil (30-100 cm) is 
+# T_GRAVEL
+# T_SAND
+# T_SILT
+# T_CLAY 
+# T_REF_BULK_DENSITY
+# Density
+# T_OC
+# T_PH_H2O
+# T_CEC_CLAY
+# T_CEC_SOIL 
+# T_BS 
+# T_TEB 
+# T_CACO3 
+# T_CASO4 
+# T_ESP
+# T_ECE 
+# S_GRAVEL
+# S_SAND 
+# S_SILT
+# S_CLAY
+# S_REF_BULK_DENSITY
+# S_OC
+# S_PH_H2O 
+# S_CEC_CLAY
+# S_CEC_SOIL
+# S_BS
+# S_TEB
+# S_CACO3
+# S_CASO4
+# S_ESP S
+# S_ECE  
 
-tmp <- dbGetQuery(con, 
-                  paste("select", paste(display.fields, collapse = ","),
-                        "from HWSD_DATA limit 10"))
+soil.data.variables <- c("T_GRAVEL", "T_SAND", "T_SILT", "T_CLAY", 
+                        "T_REF_BULK_DENSITY", "T_OC", "T_PH_H2O", 
+                        "T_CEC_CLAY", "T_CEC_SOIL", "T_BS", "T_TEB", 
+                        "T_CACO3", "T_CASO4", "T_ESP", "T_ECE", 
+                        "S_GRAVEL", "S_SAND", "S_SILT", "S_CLAY", 
+                        "S_REF_BULK_DENSITY", "S_OC", "S_PH_H2O", 
+                        "S_CEC_CLAY", "S_CEC_SOIL", "S_BS", "S_TEB", 
+                        "S_CACO3", "S_CASO4", "S_ESP", "S_ECE")
 
-dim(tmp)
-print(tmp[, display.fields])
 
+query.body <- paste("select",
+                     paste(soil.data.variables, collapse = ", "),
+                     "from HWSD_DATA where MU_GLOBAL = ")
+
+soil.data.list <- lapply(MU_GLOBAL.in.points, function(mu_glob) {
+    dbGetQuery(con, paste0(query.body, toString(mu_glob)))
+})
 
