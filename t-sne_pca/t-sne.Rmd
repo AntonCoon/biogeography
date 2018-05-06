@@ -28,7 +28,7 @@ Q
 
 
 ```{r pressure, echo=FALSE}
-tsne <- Rtsne(data, dims = 2, perplexity=30, verbose=TRUE, max_iter = 500)
+tsne <- Rtsne(Q[,-"label"], dims = 2, perplexity=30, verbose=TRUE, max_iter = 500)
 colors = rainbow(length(unique(Q$label)))
 names(colors) = unique(Q$label)
 plot(tsne$Y, t='n', main="tsne")

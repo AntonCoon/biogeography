@@ -2,6 +2,8 @@ library(psych)
 library(raster)
 library(sp)
 library(rgdal)
+library(RSQLite)
+
 
 # biogeography is working directory
 r <- raster::getData("worldclim",var="bio",res=5, path="./1_clime_data")
@@ -31,7 +33,7 @@ result_table <- cbind.data.frame(all_data["tg_ecotypeid"], coordinates(points),v
 
 # Q-table without NA coordinates
 new_Q_table <- all_data[, 4:15]
-write.csv(new_Q_table , file = "new_Q_table_12.csv")
+write.csv(new_Q_table , file = "./full_dataframes/new_Q_table_12.csv")
 
 # rename bio parameters
 # colnames(result_table)[4:22] <- c("mean_annaul_temp" , "mean_diurnal_range", 
@@ -78,7 +80,7 @@ result_table["vapr_mean"] <- rowMeans(vapr)
 
 
 # result table
-write.csv(result_table , file = "result_k_12_climate_soil.csv")
+
 
 
 # soil parameters
@@ -144,4 +146,17 @@ query.body <- paste("select",
 soil.data.list <- lapply(MU_GLOBAL.in.points, function(mu_glob) {
     dbGetQuery(con, paste0(query.body, toString(mu_glob)))
 })
+
+result.of.join <- as.data.frame(lapply(1:length(soil.data.variables), function(x){1}))
+names(result.of.join) <- soil.data.variables
+
+for(row in soil.data.list) {
+    result.of.join <- rbind(result.of.join, as.data.frame(lapply(row, mean, na.rm = T)))
+}
+result.of.join <- result.of.join[-1,]
+
+result_table <- na.omit(cbind(result_table, result.of.join))
+
+# Final result 
+write.csv(result_table , file = "./full_dataframes/result_k_12_climate_soil.csv")
 
