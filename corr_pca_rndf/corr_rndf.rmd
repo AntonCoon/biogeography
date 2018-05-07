@@ -1,0 +1,56 @@
+---
+title: "corr_rndf"
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(corrplot)
+library(caret)
+
+
+all_data <- read.csv("./full_dataframes/result_k_20_climate_soil.csv")[,-1]
+just.parametrs <- all_data[,-c(1:23)]
+```
+
+## Random forest base on clear from correlated variables.
+
+First, loock at correlation between our 58 soil and clime variables
+
+```{r}
+M <- cor(just.parametrs)
+corrplot(M, order = "AOE", cl.pos = "n", tl.pos = "n")
+```
+
+We have many strong corellated variables which may decreas model accuracy. Delete correlated using caret library.
+
+```{r}
+cor.var <- caret::findCorrelation(M, cutoff = 0.7)
+clear.just.parametrs <- just.parametrs[,-cor.var]
+
+corrplot(cor(clear.just.parametrs), order = "AOE", cl.pos = "n", tl.pos = "n")
+```
+
+We have next variables for model
+```{r}
+names(clear.just.parametrs)
+```
+
+```{r}
+lbound <- .7
+groups <- apply(all_data[, c(1:20)], 1, function(current.row) {
+    group <- ((current.row > lbound) * c(1:20))[current.row > lbound]
+    if (length(group) == 0) {
+        return(NA)
+    }
+    return(group)
+})
+str(groups)
+```
+```{r}
+prepared.data <- data.frame(group = groups)
+prepared.data <- na.omit(cbind(prepared.data, clear.just.parametrs))
+str(prepared.data)
+```
+

@@ -9,9 +9,9 @@ library(RSQLite)
 r <- raster::getData("worldclim",var="bio",res=5, path="./1_clime_data")
 # coordinate.csv - file with longitude and latitude for samples.
 # (http://1001genomes.org/accessions.html)
-# mybed_450.12.Q - Q table from admixture
+# mybed_450.20.Q - Q table from admixture
 file <- read.csv("./full_dataframes/coordinate.csv")
-tbl <- read.table("./full_dataframes/mybed_450.12.Q")
+tbl <- read.table("./full_dataframes/mybed_450.20.Q")
 
 
 all_data <- cbind(
@@ -32,8 +32,8 @@ result_table <- cbind.data.frame(all_data["tg_ecotypeid"], coordinates(points),v
 # plot(points,add=T)
 
 # Q-table without NA coordinates
-new_Q_table <- all_data[, 4:15]
-write.csv(new_Q_table , file = "./full_dataframes/new_Q_table_12.csv")
+new_Q_table <- all_data[, -c(1:3)]
+
 
 # rename bio parameters
 # colnames(result_table)[4:22] <- c("mean_annaul_temp" , "mean_diurnal_range", 
@@ -155,8 +155,8 @@ for(row in soil.data.list) {
 }
 result.of.join <- result.of.join[-1,]
 
-result_table <- na.omit(cbind(result_table, result.of.join))
+result_table <- na.omit(cbind(new_Q_table, result_table, result.of.join))
 
 # Final result 
-write.csv(result_table , file = "./full_dataframes/result_k_12_climate_soil.csv")
+write.csv(result_table , file = "./full_dataframes/result_k_20_climate_soil.csv")
 
