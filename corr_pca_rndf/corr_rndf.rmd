@@ -1,6 +1,7 @@
 ---
 title: "corr_rndf"
 output:
+  pdf_document: default
   html_document: default
 ---
 
@@ -8,14 +9,18 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 library(corrplot)
 library(caret)
+library(rpart)
+library(rpart.plot)
+library(randomForest)
 
 
-all_data <- read.csv("./full_dataframes/result_k_20_climate_soil.csv")[,-1]
+all_data <- read.csv("../full_dataframes/result_k_20_climate_soil.csv")[,-1]
 just.parametrs <- all_data[,-c(1:23)]
 ```
 
 ## Random forest base on clear from correlated variables.
 
+### Data pre-processing
 First, loock at correlation between our 58 soil and clime variables
 
 ```{r}
@@ -37,6 +42,8 @@ We have next variables for model
 names(clear.just.parametrs)
 ```
 
+Next step is transform admixture vectors to factor variables. Most simple way for achieved that is choose class for samples according to some threshold.
+
 ```{r}
 lbound <- .7
 groups <- apply(all_data[, c(1:20)], 1, function(current.row) {
@@ -51,6 +58,81 @@ str(groups)
 ```{r}
 prepared.data <- data.frame(group = groups)
 prepared.data <- na.omit(cbind(prepared.data, clear.just.parametrs))
+prepared.data$group <- factor(prepared.data$group)
 str(prepared.data)
 ```
+
+### Prediction models base on original data.
+
+Now make random forest base on this preprocessed data but first thing create simple design tree.
+
+```{r}
+set.seed(666)
+
+train.indexes <- sample(1:nrow(prepared.data), 0.5 * nrow(prepared.data))
+train <- prepared.data[train.indexes, ]
+test <- prepared.data[-train.indexes, ]
+
+res.tree <- rpart(group ~ ., data = train, method = 'class')
+prp(res.tree, box.palette="RdYlGn")
+```
+
+And calculate accuracy of a desigion tree
+
+```{r}
+t_pred <- predict(res.tree, test, type = 'class')
+confMat <- table(test$group, t_pred)
+sum(diag(confMat)) / sum(confMat)
+```
+
+Not bad, but what about random forest?
+
+```{r}
+res.forest <- randomForest(group ~ ., data = train)
+t_pred.forest <- predict(res.forest, test)
+confMat <- table(test$group, t_pred.forest)
+sum(diag(confMat)) / sum(confMat)
+```
+
+### PCA for pre - processed data
+
+Look at PCA of our dataset.
+
+```{r}
+clear.param.pca <- prcomp(prepared.data[,-1], scale=T, center=T)
+imp <- summary(clear.param.pca)$importance
+pca.axes.data <- data.frame(
+        axes.name = sort(names(imp[2, ])),
+        axes.persent = as.vector(imp[2, ]))
+
+levels(pca.axes.data$axes.name) <- unlist(lapply(1:20, function(i) {paste0("PC", toString(i))}))
+
+ggplot(pca.axes.data,
+    aes(x = axes.name, y = axes.persent)) +
+    geom_bar(stat="identity", fill="steelblue") + 
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+```{r}
+pca.result <- as.data.frame(cbind(prepared.data$group, clear.param.pca$x))
+ggplot(pca.result, aes(x = PC1, y = PC2, colour = factor(V1))) + 
+    geom_point()+
+    labs(x = 'PC1', y = 'PC2') + 
+    theme_minimal()
+```
+
+### Apply random forest model to PCA component
+
+```{r}
+# train.pca.data <- pca.result[train.indexes, ]
+# test.pca.data <- pca.result[-train.indexes, ]
+# 
+# pca.res.forest <- randomForest(V1 ~ ., data = train.pca.data)
+# pca.t_pred.forest <- predict(pca.res.forest, test.pca.data)
+# pca.confMat <- table(test.pca.data$V1, pca.t_pred.forest)
+# sum(diag(pca.confMat)) / sum(pca.confMat)
+
+```
+
 
