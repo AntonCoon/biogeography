@@ -94,6 +94,11 @@ confMat <- table(test$group, t_pred.forest)
 sum(diag(confMat)) / sum(confMat)
 ```
 
+```{r}
+varImpPlot(res.forest)
+```
+
+
 ### PCA for pre - processed data
 
 Look at PCA of our dataset.
@@ -125,13 +130,15 @@ ggplot(pca.result, aes(x = PC1, y = PC2, colour = factor(V1))) +
 ### Apply random forest model to PCA component
 
 ```{r}
-# train.pca.data <- pca.result[train.indexes, ]
-# test.pca.data <- pca.result[-train.indexes, ]
-# 
-# pca.res.forest <- randomForest(V1 ~ ., data = train.pca.data)
-# pca.t_pred.forest <- predict(pca.res.forest, test.pca.data)
-# pca.confMat <- table(test.pca.data$V1, pca.t_pred.forest)
-# sum(diag(pca.confMat)) / sum(pca.confMat)
+train.pca.data <- pca.result[train.indexes, ]
+test.pca.data <- pca.result[-train.indexes, ]
+train.pca.data$V1 <- factor(train.pca.data$V1)
+test.pca.data$V1 <- factor(test.pca.data$V1)
+
+pca.res.forest <- randomForest(V1 ~ ., data = train.pca.data)
+pca.t_pred.forest <- predict(pca.res.forest, test.pca.data)
+pca.confMat <- table(test.pca.data$V1, pca.t_pred.forest)
+sum(diag(pca.confMat)) / sum(pca.confMat)
 
 ```
 
