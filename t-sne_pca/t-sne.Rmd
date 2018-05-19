@@ -14,7 +14,7 @@ library(Rtsne)
 ```
 
 
-```{r cars}
+```{r cars, echo=TRUE}
 library(data.table)
 Q_table <- read.csv("../full_dataframes/new_Q_table_12.csv")
 Q <- data.table(Q_table)[, !"X"]
@@ -33,6 +33,7 @@ colors = rainbow(length(unique(Q$label)))
 names(colors) = unique(Q$label)
 plot(tsne$Y, t='n', main="tsne")
 text(tsne$Y, labels=Q$label, col=colors[Q$label])
+data
 ```
 
 ```{r pressure, echo=FALSE}
