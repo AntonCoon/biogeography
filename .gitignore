@@ -37,3 +37,4 @@ rsconnect/
 
 # huge .bil file
 2_soil_data/hwsd.bil
+.Rproj.user
