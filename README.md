@@ -1,5 +1,6 @@
 # biogeography
 The project about geography influence on genome of plant.
+
 ## The goal
 1. Determine the climate and soil influence on genome of
 modeling plants.
@@ -38,7 +39,15 @@ modeling plants.
     "rworldmap",
     "rworldxtra",
     "ade4"))`
-3. Python 3 packages
+3. Python3 packages
+`
+import(pandas)
+import(numpy)
+import(matplotlib)
+import(seaborn)
+import(sklearn)
+import(xgboost)
+`
 
 ## Example
 See example in ./corr_pca_rndf
