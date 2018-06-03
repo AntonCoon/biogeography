@@ -14,8 +14,7 @@ file <- read.csv("./full_dataframes/coordinate.csv")
 tbl <- read.table("./full_dataframes/mybed_450.20.Q")
 
 
-all_data <- cbind(
-  file[c("tg_ecotypeid", "latitude", "longitude")], tbl)
+all_data <- cbind(file[c("tg_ecotypeid", "latitude", "longitude")], tbl)
 # remove NA values from data
 all_data <- na.omit(all_data)
 
