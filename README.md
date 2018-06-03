@@ -8,8 +8,13 @@ modeling plants.
   
 **Tasks**
   ● Get familiar with WorldClim and Soil databases
+  
   ● Download 1001 genome SNPs data and collection coordinates of arabidopsis
+  
   ● Get climate and soil data associated with this points
+  
   ● Convert SNPs to vectors by Admixture tools
+  
   ● Design model
+  
   ● Interpretation of result
