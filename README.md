@@ -14,5 +14,5 @@ The project about geography influence on genome of plant.
       ● Interpretation of result
 
 
-[WorldClim](http://www.worldclim.org/) database 
+[WorldClim](http://www.worldclim.org/) database and 
 description some [parameters](http://www.worldclim.org/bioclim) from WorldClim database used in this work
