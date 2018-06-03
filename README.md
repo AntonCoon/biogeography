@@ -12,3 +12,7 @@ The project about geography influence on genome of plant.
       ● Convert SNPs to vectors by Admixture tools
       ● Design model
       ● Interpretation of result
+
+
+[WorldClim](http://www.worldclim.org/) database 
+description some [parameters](http://www.worldclim.org/bioclim) from WorldClim database used in this work
