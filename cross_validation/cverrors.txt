@@ -20,4 +20,5 @@ CV error (K=20): 0.01503
 CV error (K=21): 0.01508
 CV error (K=22): 0.01506
 CV error (K=23): 0.01506
+CV error (K=24): 0.01507
 CV error (K=25): 0.01511
