@@ -20,11 +20,13 @@ modeling plants.
 
 ## Packages and dependencies
 1. Tools
-..* admixture
-..* PLINK
-..* vcftools
+  * admixture
+  * PLINK
+  * vcftools
+  
 2. R packages
-`install.packages(c(
+```
+install.packages(c(
     "psych", 
     "raster",
     "sp",
@@ -38,16 +40,19 @@ modeling plants.
     "Cairo",
     "rworldmap",
     "rworldxtra",
-    "ade4"))`
+    "ade4"))
+ ```
+    
 3. Python3 packages
-`
+
+```
 import(pandas)
 import(numpy)
 import(matplotlib)
 import(seaborn)
 import(sklearn)
 import(xgboost)
-`
+```
 
 ## Example
 See example in ./corr_pca_rndf
