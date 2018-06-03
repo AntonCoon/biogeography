@@ -2,10 +2,7 @@
 The project about geography influence on genome of plant.
 
 #### The goal
-
-      ● Determine the climate and soil influence on genome of
-modeling plants.
-      
+      ● Determine the climate and soil influence on genome of modeling plants.
       ● Build a model base on genome and environment data.
   
 #### Tasks
