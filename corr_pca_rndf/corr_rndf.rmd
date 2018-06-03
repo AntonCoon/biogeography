@@ -31,10 +31,10 @@ corrplot(M, order = "AOE", cl.pos = "n", tl.pos = "n")
 We have many strong corellated variables which may decreas model accuracy. Delete correlated using caret library.
 
 ```{r}
-cor.var <- caret::findCorrelation(M, cutoff = 0.7)
+cor.var <- caret::findCorrelation(M, cutoff = 0.5)
 clear.just.parametrs <- just.parametrs[,-cor.var]
 
-corrplot(cor(clear.just.parametrs), order = "AOE", cl.pos = "n", tl.pos = "n")
+corrplot(cor(clear.just.parametrs))
 ```
 
 We have next variables for model

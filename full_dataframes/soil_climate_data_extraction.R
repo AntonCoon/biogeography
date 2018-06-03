@@ -11,13 +11,13 @@ r <- raster::getData("worldclim",var="bio",res=5, path="./1_clime_data")
 # (http://1001genomes.org/accessions.html)
 # mybed_450.20.Q - Q table from admixture
 file <- read.csv("./full_dataframes/coordinate.csv")
-tbl <- read.table("./full_dataframes/mybed_450.20.Q")
+tbl <- read.table("./full_dataframes/mybed_450.8.Q")
 
 
 all_data <- cbind(file[c("tg_ecotypeid", "latitude", "longitude")], tbl)
 # remove NA values from data
 all_data <- na.omit(all_data)
-
+write.csv(all_data[, -1], file = "./full_dataframes/lat_lon_Q_k_8.csv")
 
 coords <- data.frame(x=all_data["longitude"],y=all_data["latitude"])
 points <- SpatialPoints(coords, proj4string = r@crs)

@@ -1,0 +1,43 @@
+
+Call:
+lm(formula = y ~ x)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-18.954  -0.592  -0.592  -0.592   7.656 
+
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  0.591979   0.002327   254.4   <2e-16 ***
+x           15.733252   0.052320   300.7   <2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 1.824 on 639013 degrees of freedom
+Multiple R-squared:  0.124,	Adjusted R-squared:  0.124 
+F-statistic: 9.043e+04 on 1 and 639013 DF,  p-value: < 2.2e-16
+
+[1] "RoughCorrels"
+Monte-Carlo test
+Call: mantel.rtest(m1 = x, m2 = y, nrepet = 30)
+
+Observation: 0.7192697 
+
+Based on 30 replicates
+Simulated p-value: 0.03225806 
+Alternative hypothesis: greater 
+
+      Std.Obs   Expectation      Variance 
+32.8066896382 -0.0067267452  0.0004897159 
+[1] "FilteredCorrels"
+Monte-Carlo test
+Call: mantelnoneuclid(m1 = m1, m2 = m2, nrepet = nrepet)
+
+Observation: 0.3520889 
+
+Based on 30 replicates
+Simulated p-value: 0.03225806 
+Alternative hypothesis: greater 
+
+     Std.Obs  Expectation     Variance 
+8.840712e+01 9.103677e-04 1.577907e-05 
