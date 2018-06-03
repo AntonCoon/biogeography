@@ -15,7 +15,7 @@ modeling plants.
 6. Interpretation of result
 
 ## Methods used
-1. Admixture component analyses
+1. [Admixture](https://www.genetics.ucla.edu/software/admixture/) component analyses
 2. Statistical classifycation methods
 
 ## Packages and dependencies
