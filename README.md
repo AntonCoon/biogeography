@@ -2,11 +2,14 @@
 The project about geography influence on genome of plant.
 
 **The goal**
+
    ● Determine the climate and soil influence on genome of
 modeling plants.
+
    ● Build a model base on genome and environment data.
   
 **Tasks**
+
   ● Get familiar with WorldClim and Soil databases
   
   ● Download 1001 genome SNPs data and collection coordinates of arabidopsis
