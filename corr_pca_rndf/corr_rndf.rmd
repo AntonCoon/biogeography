@@ -14,8 +14,8 @@ library(rpart.plot)
 library(randomForest)
 
 
-all_data <- read.csv("../full_dataframes/result_k_20_climate_soil.csv")[,-1]
-just.parametrs <- all_data[,-c(1:23)]
+all_data <- read.csv("../full_dataframes/result_k_14_climate_soil.csv")[,-1]
+just.parametrs <- all_data[,-c(1:17)]
 ```
 
 ## Random forest base on clear from correlated variables.
@@ -46,8 +46,8 @@ Next step is transform admixture vectors to factor variables. Most simple way fo
 
 ```{r}
 lbound <- .7
-groups <- apply(all_data[, c(1:20)], 1, function(current.row) {
-    group <- ((current.row > lbound) * c(1:20))[current.row > lbound]
+groups <- apply(all_data[, c(1:14)], 1, function(current.row) {
+    group <- ((current.row > lbound) * c(1:14))[current.row > lbound]
     if (length(group) == 0) {
         return(NA)
     }

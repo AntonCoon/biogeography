@@ -11,13 +11,13 @@ r <- raster::getData("worldclim",var="bio",res=5, path="./1_clime_data")
 # (http://1001genomes.org/accessions.html)
 # mybed_450.20.Q - Q table from admixture
 file <- read.csv("./full_dataframes/coordinate.csv")
-tbl <- read.table("./full_dataframes/mybed_450.8.Q")
+tbl <- read.table("./full_dataframes/mybed_450.14.Q")
 
 
 all_data <- cbind(file[c("tg_ecotypeid", "latitude", "longitude")], tbl)
 # remove NA values from data
 all_data <- na.omit(all_data)
-write.csv(all_data[, -1], file = "./full_dataframes/lat_lon_Q_k_8.csv")
+write.csv(all_data[, -1], file = "./full_dataframes/lat_lon_Q_k_14.csv")
 
 coords <- data.frame(x=all_data["longitude"],y=all_data["latitude"])
 points <- SpatialPoints(coords, proj4string = r@crs)
@@ -26,26 +26,21 @@ points <- SpatialPoints(coords, proj4string = r@crs)
 values <- extract(r, points)
 result_table <- cbind.data.frame(all_data["tg_ecotypeid"], coordinates(points),values)
 
-## plot pointes in map
-# plot(r[[1]])
-# plot(points,add=T)
-
 # Q-table without NA coordinates
 new_Q_table <- all_data[, -c(1:3)]
 
 
 # rename bio parameters
-# colnames(result_table)[4:22] <- c("mean_annaul_temp" , "mean_diurnal_range", 
-#                                   "isothermality", "sesonal_temp", 
-#                                   "max_temp", "min_temp", 
-#                                   "annual_temp_range", "mean_temp_wetq", 
-#                                   "mean_temp_dryq", "mean_temp_warmq", 
-#                                   "mean_temp_coldq", "annual_prec",
-#                                   "max_prec", "min_prec",
-#                                   "season_prec", "prec_wetq",
-#                                   "prec_dryq" , "prec_warmq",
-#                                   "prec_coldq")
-# colnames(result_table)
+colnames(result_table)[4:22] <- c("mean_annaul_temp" , "mean_diurnal_range",
+                                  "isothermality", "sesonal_temp",
+                                  "max_temp", "min_temp",
+                                  "annual_temp_range", "mean_temp_wetq",
+                                  "mean_temp_dryq", "mean_temp_warmq",
+                                  "mean_temp_coldq", "annual_prec",
+                                  "max_prec", "min_prec",
+                                  "season_prec", "prec_wetq",
+                                  "prec_dryq" , "prec_warmq",
+                                  "prec_coldq")
 
 # for other parameters from worldclim dowload manualy 5 minute 
 # tar (remove readme.txt from folder)
@@ -77,11 +72,6 @@ result_table["vapr_min"] <- apply(vapr, 1, FUN=min)
 result_table["vapr_max"] <- apply(vapr, 1, FUN=max) 
 result_table["vapr_mean"] <- rowMeans(vapr)
 
-
-# result table
-
-
-
 # soil parameters
 hwsd.path <- './2_soil_data/hwsd.bil'
 hwsd.sql.path <- './2_soil_data/HWSD.sqlite'
@@ -91,7 +81,6 @@ MU_GLOBAL.in.points <- extract(hwsd, points)
 
 m <- dbDriver("SQLite")
 con <- dbConnect(m, dbname=hwsd.sql.path)
-dbListTables(con)
 
 # According to Harmonized World Soil Database dockumentation 
 # http://www.fao.org/fileadmin/templates/nr/documents/HWSD/HWSD_Documentation.pdf 
@@ -157,5 +146,4 @@ result.of.join <- result.of.join[-1,]
 result_table <- na.omit(cbind(new_Q_table, result_table, result.of.join))
 
 # Final result 
-write.csv(result_table , file = "./full_dataframes/result_k_20_climate_soil.csv")
-
+write.csv(result_table , file = "./full_dataframes/result_k_14_climate_soil.csv")
