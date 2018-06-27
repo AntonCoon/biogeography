@@ -12,6 +12,7 @@ library(caret)
 library(rpart)
 library(rpart.plot)
 library(randomForest)
+source("importance_plot.R")
 
 
 all_data <- read.csv("../full_dataframes/result_k_14_climate_soil.csv")[,-1]
@@ -74,7 +75,7 @@ train <- prepared.data[train.indexes, ]
 test <- prepared.data[-train.indexes, ]
 
 res.tree <- rpart(group ~ ., data = train, method = 'class')
-prp(res.tree, box.palette="RdYlGn")
+prp(res.tree)
 ```
 
 And calculate accuracy of a desigion tree
@@ -95,7 +96,7 @@ sum(diag(confMat)) / sum(confMat)
 ```
 
 ```{r}
-varImpPlot(res.forest)
+important.dot.plot(res.forest)
 ```
 
 

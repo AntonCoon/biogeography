@@ -1,0 +1,18 @@
+---
+title: "soil_climate"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(corrplot)
+library(caret)
+library(rpart)
+library(rpart.plot)
+library(randomForest)
+
+
+all_data <- read.csv("../full_dataframes/result_k_14_climate_soil.csv")[,-1]
+just.parametrs <- all_data[,-c(1:17)]
+```
+
