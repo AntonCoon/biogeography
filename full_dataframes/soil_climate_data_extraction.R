@@ -24,7 +24,7 @@ points <- SpatialPoints(coords, proj4string = r@crs)
 
 # extract bio parameters from worldclim for selcted pointes 
 values <- extract(r, points)
-result_table <- cbind.data.frame(all_data["tg_ecotypeid"], coordinates(points),values)
+result_table <- cbind.data.frame(all_data["tg_ecotypeid"], coordinates(points), values)
 
 # Q-table without NA coordinates
 new_Q_table <- all_data[, -c(1:3)]

@@ -12,7 +12,7 @@ library(caret)
 library(rpart)
 library(rpart.plot)
 library(randomForest)
-source("importance_plot.R")
+source("../importance_plot.R")
 
 
 all_data <- read.csv("../full_dataframes/result_k_14_climate_soil.csv")[,-1]
