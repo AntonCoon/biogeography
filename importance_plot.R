@@ -10,7 +10,8 @@ important.bar.plot <- function(res.forest, ...){
     ggplot(sorted.importance.dataframe(res.forest), aes(x = name, y = importance)) +
         geom_bar(stat="identity", fill = "steelblue", alpha = 0.7) +
         theme_minimal() +
-        theme(axis.text.x = element_text(angle = 75, hjust = 1), ...)
+        theme(axis.text.x = element_text(angle = 75, hjust = 1), ...) +
+        xlab("soil and clime variables")
 }
 
 important.dot.plot <- function(res.forest, ...){
@@ -18,5 +19,6 @@ important.dot.plot <- function(res.forest, ...){
         geom_point(col = "steelblue") + 
         theme_minimal() +
         theme(axis.text.x = element_text(angle = 75, hjust = 1), ...) +
-        geom_line(aes(x = name, y = importance, group=1), alpha = 0.4)
+        geom_line(aes(x = name, y = importance, group=1), alpha = 0.4) +
+        xlab("soil and clime variables")
 }

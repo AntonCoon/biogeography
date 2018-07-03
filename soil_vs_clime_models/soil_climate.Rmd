@@ -11,6 +11,16 @@ library(caret)
 library(rpart)
 library(rpart.plot)
 library(randomForest)
+library(ggplot2)
+library(reshape2)
+library(gridGraphics)
+library(grid)
+library(ggpubr)
+library(RColorBrewer)
+library(gplots)
+library(ade4)
+
+
 source("../importance_plot.R")
 
 # count of admixture components
@@ -18,6 +28,139 @@ adm.count = 14
 all_data <- read.csv("../full_dataframes/result_k_14_climate_soil.csv")[,-1]
 just.parametrs <- all_data[,-c(1:(adm.count + 3))]
 ```
+
+## Admixture components visualisation
+
+### Admixture cross validation
+```{r}
+cross.validation <- data.frame(
+    k = c(1:25)[-9],
+    `CV error` = c(0.01899, 0.01769, 0.01704, 0.01657,
+                   0.01624, 0.01593, 0.01577, 0.01554, 
+                   0.01532, 0.01526, 0.01529, 0.01515, 
+                   0.01510, 0.01515, 0.01511, 0.01507, 
+                   0.01506, 0.01506, 0.01503, 0.01508, 
+                   0.01506, 0.01506, 0.01507, 0.01511)
+)
+
+ggplot(cross.validation, aes(x = k, y =`CV.error`)) + 
+    geom_point(col = "steelblue") + 
+    theme_minimal() +
+    geom_line(aes(x = k, y = `CV.error`), alpha = 0.6) +
+    xlab("number of admixture component") +
+    ylab("admixture CV error") +
+    geom_point(data = data.frame(k = 14, `CV error` = 0.01510), colour="red")
+```
+
+
+
+### Predict klasters base on soil and klimate data.
+
+```{r}
+just.parametrs <- scale(just.parametrs)
+# Determine number of clusters
+wss <- rep(0, 25)
+for (j in 1:15) {
+    wss_ <- (nrow(just.parametrs) - 1) * sum(apply(just.parametrs, 2, var))
+    for (i in 2:25) {
+        wss_[i] <- sum(kmeans(just.parametrs, centers=i)$withinss)
+    }
+    wss <- wss + wss_
+}
+wss <- wss / 15
+
+ggplot(data.frame(id = 1:25, wss = wss), aes(x = id, y = wss)) +
+    geom_point(col = "steelblue") + 
+    theme_minimal() +
+    geom_line(aes(x = id, y = wss), alpha = 0.6) +
+    xlab("number of clasters") +
+    ylab("within groups sum of squares") +
+    geom_point(data = data.frame(id = 14, wss = wss[14]), colour="red")
+```
+
+## Admixture barplot
+
+```{r}
+claster.count = 14
+
+fit <- kmeans(just.parametrs, adm.count)
+just.parametrs <- data.frame(just.parametrs, cluster = fit$cluster)
+
+admixture.and.clasters <- data.frame(all_data[, 1:claster.count], cluster = just.parametrs$cluster)
+admixture.and.clasters <- admixture.and.clasters[order(admixture.and.clasters$cluster),]
+
+df <- admixture.and.clasters[, 1:claster.count]
+
+df$population = admixture.and.clasters$cluster
+df$subject_id = paste("id", 1:nrow(df), sep="")
+
+mdat = melt(df, id.vars=c("subject_id", "population"), 
+            variable.name="Admixture", value.name="Fraction")
+
+mdat$Admixture = factor(mdat$Admixture, 
+                       levels=names(sort(colSums(df[, 1:claster.count]), decreasing=TRUE)))
+
+custom.colors = c("#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd",
+          "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf", 
+          "#aec7e8", "#ffbb78", "#98df8a", "#ff9896")
+names(custom.colors) = levels(mdat$Admixture)
+
+ggplot(mdat, aes(x=subject_id, y=Fraction, fill=Admixture, order=Admixture)) +
+    geom_col(width = 1) +
+    facet_grid(. ~ population, drop=TRUE, space="free", scales="free") +
+    theme(panel.grid=element_blank()) +
+    theme(panel.background=element_rect(fill=NA, colour="grey25")) +
+    theme(axis.title.x=element_blank()) +
+    theme(axis.text.x=element_blank()) +
+    theme(axis.ticks.x=element_blank()) +
+    theme(strip.background=element_blank()) +
+    theme(strip.text=element_text(size=12)) +
+    theme(legend.key=element_rect(colour="grey25")) +
+    scale_x_discrete(expand=c(0, 0)) +
+    scale_y_continuous(expand=c(0, 0)) +
+    scale_fill_manual(values = custom.colors) +
+    guides(fill=guide_legend(override.aes=list(colour=NULL))) +
+    ylab(NULL) +
+      theme(axis.title.y = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank())
+```
+
+## Mantel test
+
+```{r}
+genetic.distance.matrix <- dist(all_data[, 1:14])
+geography.distance.matrix <-dist(all_data[,-c(1:(adm.count + 3))])
+heatmap.2(as.matrix(genetic.distance.matrix), 
+          dendrogram = 'none', 
+          Rowv = FALSE, 
+          Colv = FALSE, 
+          trace='none',
+          labRow = FALSE,
+          labCol = FALSE,
+          key = FALSE)
+```
+
+```{r}
+heatmap.2(as.matrix(geography.distance.matrix), 
+          dendrogram = 'none', 
+          Rowv = FALSE, 
+          Colv = FALSE, 
+          trace='none',
+          labRow = FALSE,
+          labCol = FALSE,
+          key = FALSE)
+```
+
+
+```{r}
+(RoughCorrels <- mantel.rtest(genetic.distance.matrix, geography.distance.matrix, nrepet = 30))
+```
+
+```{r}
+
+```
+
 
 ## Random forest based on all variables
 
@@ -61,9 +204,4 @@ sum(diag(confMat)) / sum(confMat)
 ```{r}
 important.dot.plot(res.forest)
 ```
-
-
-
-
-
 
