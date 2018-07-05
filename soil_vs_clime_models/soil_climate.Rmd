@@ -81,15 +81,19 @@ ggplot(data.frame(id = 1:25, wss = wss), aes(x = id, y = wss)) +
 ## Admixture barplot
 
 ```{r}
-claster.count = 14
+set.seed(1)
 
-fit <- kmeans(just.parametrs, adm.count)
+cluster.count = 14
+just.parametrs <- all_data[,-c(1:(adm.count + 3))]
+just.parametrs <- scale(just.parametrs)
+
+fit <- kmeans(just.parametrs, cluster.count)
 just.parametrs <- data.frame(just.parametrs, cluster = fit$cluster)
 
-admixture.and.clasters <- data.frame(all_data[, 1:claster.count], cluster = just.parametrs$cluster)
+admixture.and.clasters <- data.frame(all_data[, 1:adm.count], cluster = just.parametrs$cluster)
 admixture.and.clasters <- admixture.and.clasters[order(admixture.and.clasters$cluster),]
 
-df <- admixture.and.clasters[, 1:claster.count]
+df <- admixture.and.clasters[, 1:adm.count]
 
 df$population = admixture.and.clasters$cluster
 df$subject_id = paste("id", 1:nrow(df), sep="")
@@ -98,7 +102,7 @@ mdat = melt(df, id.vars=c("subject_id", "population"),
             variable.name="Admixture", value.name="Fraction")
 
 mdat$Admixture = factor(mdat$Admixture, 
-                       levels=names(sort(colSums(df[, 1:claster.count]), decreasing=TRUE)))
+                       levels=names(sort(colSums(df[, 1:adm.count]), decreasing=TRUE)))
 
 custom.colors = c("#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd",
           "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf", 
@@ -126,10 +130,21 @@ ggplot(mdat, aes(x=subject_id, y=Fraction, fill=Admixture, order=Admixture)) +
         axis.ticks.y = element_blank())
 ```
 
+## Group metrics
+This metrics can give understanding how similar we predict groups base on environment with groups based on admixture.
+
+```{r}
+metrics <- lapply(1:cluster.count, function(cluster.number) {
+    cluster.subset <- subset.data.frame(df, population == cluster.number)
+    max(colSums(cluster.subset[,1:adm.count])) / nrow(cluster.subset)
+})
+unlist(metrics)
+```
+
 ## Mantel test
 
 ```{r}
-genetic.distance.matrix <- dist(all_data[, 1:14])
+genetic.distance.matrix <- dist(all_data[, 1:adm.count])
 geography.distance.matrix <-dist(all_data[,-c(1:(adm.count + 3))])
 heatmap.2(as.matrix(genetic.distance.matrix), 
           dendrogram = 'none', 
@@ -154,11 +169,11 @@ heatmap.2(as.matrix(geography.distance.matrix),
 
 
 ```{r}
-(RoughCorrels <- mantel.rtest(genetic.distance.matrix, geography.distance.matrix, nrepet = 30))
+(RoughCorrels <- mantel.rtest(genetic.distance.matrix, geography.distance.matrix, nrepet = 100))
 ```
 
 ```{r}
-
+plot(RoughCorrels, main = "Mantel's test")
 ```
 
 
