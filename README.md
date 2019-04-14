@@ -54,8 +54,8 @@ import(sklearn)
 import(xgboost)
 ```
 
-## Example
-See example in ./corr_pca_rndf
+## Examples
+See example in ./corr_pca_rndf or ./soil_vs_clime_models
 
 ## Databases
 1. Climate raster database http://www.worldclim.org/
